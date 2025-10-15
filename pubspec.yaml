@@ -1,0 +1,62 @@
+name: salaar
+description: A community reporting app
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  provider: ^6.1.1
+  supabase_flutter: ^2.1.1
+  image_picker: ^1.0.4
+  intl: ^0.19.0
+  http: ^1.1.0
+  latlong2: ^0.9.1
+  url_launcher: ^6.1.11
+  flutter_local_notifications: ^17.2.3
+  flutter_map: ^6.1.0
+  geolocator: ^10.1.0
+  permission_handler: ^11.3.1
+  google_sign_in: ^6.2.1
+  flutter_image_compress: ^2.1.0
+  path: ^1.9.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter:
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/
+    - assets/images/
+    - assets/images/salaar_logo.png
+    - assets/images/muneer_leader.png
+
+# App Icon Configuration
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/salaar_logo.png"
+  min_sdk_android: 21
+  web:
+    generate: true
+    image_path: "assets/images/salaar_logo.png"
+    background_color: "#121212"
+    theme_color: "#D4AF37"
+  windows:
+    generate: true
+    image_path: "assets/images/salaar_logo.png"
+    icon_size: 48
+  macos:
+    generate: true
+    image_path: "assets/images/salaar_logo.png"
