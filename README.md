@@ -19,8 +19,9 @@ Salaar is a comprehensive civic reporting application that enables citizens to r
 ### 🔔 Prabhas-Style Notifications
 - **Telugu Language Support** with authentic Prabhas movie references
 - **Random Message Selection** from 60+ unique notification templates
-- **Custom Sound Effects** for different notification types
+- **Random Sound Effects** for different notification types (xp_sound, task_sound, worker_assignment)
 - **Cultural Relevance** with Baahubali, Salaar, Rebel, and other movie themes
+- **Dynamic Sound Mapping** - Different sounds for worker assignments, completions, XP rewards, and admin notifications
 
 ### 📍 Real-Time Features
 - **GPS Location Tracking** with background services
@@ -31,8 +32,10 @@ Salaar is a comprehensive civic reporting application that enables citizens to r
 ### 🎨 Modern UI/UX
 - **Salaar Dark Theme** with gold accents (#D4AF37)
 - **Responsive Design** that works on all screen sizes
+- **Overflow Protection** with proper text truncation and flexible layouts
 - **Smooth Animations** and transitions
 - **Dinosaur Loading Screen** with emoji animations
+- **Adaptive Components** that adjust to different screen sizes
 
 ## 🛠️ Technology Stack
 
@@ -242,12 +245,16 @@ Report Completed: +20 XP
 Level Calculation: Based on total XP with 5 levels
 ```
 
-**Level Names:**
-1. The Beginning
-2. Ghaniyaar
-3. Mannarasi
-4. Shouryaanga
-5. SALAAR
+**Level Names (Salaar Theme):**
+1. **The Beginning** (0-99 XP)
+2. **Ghaniyaar** (100-299 XP)
+3. **Mannarasi** (300-699 XP)
+4. **Shouryaanga** (700-999 XP)
+5. **SALAAR** (1000+ XP)
+
+**Success Rate Calculation:**
+- **Workers**: Success rate = (Completed Tasks / Total Assigned Tasks) × 100
+- **Citizens**: Success rate = (Completed Reports / Total Submitted Reports) × 100
 
 ## 🔔 Notification System
 
@@ -273,11 +280,15 @@ The app features a unique notification system with Prabhas movie references:
 "*Salaar update: 'Discipline maintain cheyali...' {message}* ⚡"
 ```
 
-### Custom Sound System
-- `xp_sound.mp3` - XP rewards and general notifications
-- `task_sound.mp3` - Task assignments and alerts
-- `worker_assignment.mp3` - Worker assignment notifications
-- `reminder_sound.mp3` - Reminders and updates
+### Random Sound System
+- **Dynamic Sound Selection** - Random sounds for each notification type
+- **Available Sounds**: `xp_sound`, `task_sound`, `worker_assignment`
+- **Sound Categories**:
+  - **Worker Assignment**: Random from worker-related sounds
+  - **Task Completion**: Random from completion-related sounds
+  - **XP Rewards**: Random from XP-related sounds
+  - **Admin Notifications**: Random from admin-related sounds
+- **Cultural Integration** - Sounds match the Prabhas movie theme
 
 ## 📱 App Architecture
 
@@ -289,8 +300,9 @@ The app features a unique notification system with Prabhas movie references:
 - **NavigationProvider** - Bottom navigation state
 
 ### Service Layer
-- **PrabhasNotificationService** - Telugu notifications with movie references
-- **WorkStatisticsService** - Real-time XP and level calculations
+- **PrabhasNotificationService** - Telugu notifications with movie references and random sounds
+- **WorkStatisticsService** - Role-based statistics and success rate calculations
+- **XPService** - Centralized XP management and logging
 - **ImageUploadService** - Photo upload to Supabase storage
 - **LocationService** - GPS tracking and geocoding
 - **AppInitializationService** - App startup and service initialization
@@ -362,8 +374,9 @@ flutter run
 - **Task Management**: Update status, upload completion photos
 - **Location Tracking**: Background GPS updates every 15 minutes
 - **Navigation**: Route planning to issue locations
-- **Profile**: Work statistics, department info, settings
+- **Profile**: Work statistics, success rate, department info, settings
 - **Map View**: See assigned tasks on map
+- **Success Rate Tracking**: Monitor completion percentage and performance
 
 ### 👨‍💼 Admin Features
 - **Dashboard**: System overview, statistics, quick actions
@@ -396,6 +409,29 @@ flutter run
 - **Input Sanitization**: All user inputs are validated
 - **File Upload Security**: Image uploads are validated and secured
 - **Location Privacy**: Location data is encrypted and protected
+
+## 🆕 Recent Improvements (Latest Update)
+
+### ✅ Fixed Issues
+- **Worker Statistics**: Fixed role-based statistics calculation for workers vs citizens
+- **Success Rate**: Added proper success rate calculation for all user roles
+- **UI Overflow**: Fixed overflow issues in community and admin screens
+- **Random Notifications**: Implemented random sound selection for different notification types
+- **XP System**: Centralized XP management with proper logging
+- **Database Schema**: Cleaned up duplicate columns and optimized queries
+
+### 🚀 New Features
+- **Role-Based Statistics**: Workers see assigned task stats, citizens see reported issue stats
+- **Dynamic Sound System**: Random notification sounds for better user experience
+- **Responsive UI**: All screens now properly handle different screen sizes
+- **XPService**: Centralized XP awarding and logging system
+- **Success Rate Tracking**: Monitor performance for workers and citizens
+
+### 🔧 Technical Improvements
+- **Database Optimization**: Removed unnecessary columns and improved queries
+- **Error Handling**: Better error handling for missing database columns
+- **State Management**: Improved state management with proper loading indicators
+- **Code Cleanup**: Removed duplicate files and optimized code structure
 
 ## 📈 Performance Optimizations
 
@@ -435,7 +471,11 @@ flutter test integration_test/
 - [ ] Real-time updates across devices
 - [ ] Location tracking and mapping
 - [ ] XP calculation and level progression
-- [ ] Prabhas-style notifications
+- [ ] Prabhas-style notifications with random sounds
+- [ ] Role-based statistics (workers vs citizens)
+- [ ] Success rate calculations
+- [ ] UI responsiveness on different screen sizes
+- [ ] Overflow handling in community and admin screens
 
 ## 🚀 Deployment
 
