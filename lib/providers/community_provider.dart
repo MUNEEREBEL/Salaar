@@ -55,10 +55,10 @@ class CommunityDiscussion {
       id: json['id'],
       title: json['title'],
       content: json['content'],
-      authorId: json['author_id'],
-      authorName: json['profiles']?['full_name'],
-      commentCount: json['comment_count'] ?? 0,
-      likeCount: json['like_count'] ?? 0,
+      authorId: json['user_id'] ?? json['author_id'], // Handle both column names
+      authorName: json['profiles']?['full_name'] ?? 'Unknown User',
+      commentCount: json['comment_count'] ?? 0, // Will be 0 if column doesn't exist
+      likeCount: json['like_count'] ?? 0, // Will be 0 if column doesn't exist
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
       replies: List<DiscussionReply>.from(
@@ -157,10 +157,10 @@ class CommunityProvider with ChangeNotifier {
       // Don't set loading to true here to avoid blocking UI
       _error = null;
 
-            // Try to fetch from discussions table directly
+            // Try to fetch from discussions table directly (without comment_count as it doesn't exist)
             final response = await _supabase
                 .from('discussions')
-                .select('id, title, content, user_id, comment_count, like_count, created_at, updated_at')
+                .select('id, title, content, user_id, created_at, updated_at')
                 .order('created_at', ascending: false)
                 .limit(20);
 

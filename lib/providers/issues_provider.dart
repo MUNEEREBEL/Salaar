@@ -6,6 +6,7 @@ import '../services/image_upload_service.dart';
 import '../services/notification_service.dart';
 import '../services/basic_notification_service.dart';
 import '../services/prabhas_notification_service.dart';
+import '../services/xp_service.dart';
 import '../widgets/level_up_popup.dart';
 
 class Issue {
@@ -303,13 +304,16 @@ class IssuesProvider with ChangeNotifier {
       final result = await _supabase.from('issues').insert(issueData).select().single();
       final issueId = result['id'] as String;
 
-      // XP tracking removed - will be calculated from actual data
-      print('✅ Report submitted successfully - XP will be calculated from database');
+      // Add XP for report submission using proper XP service
+      final currentUser = _supabase.auth.currentUser;
+      if (currentUser != null) {
+        await XPService.awardXPForAction(
+          userId: currentUser.id,
+          action: 'report_submitted',
+        );
+      }
 
-        // Don't send notification for report submission - user doesn't need it
-
-      // Show XP success notification
-      print('✅ XP Added: +10 XP for submitting report');
+      print('✅ Report submitted successfully - XP added via XPService');
 
       _refreshDataInBackground();
       return true;
@@ -522,10 +526,13 @@ class IssuesProvider with ChangeNotifier {
               .single();
           final workerName = workerResponse['full_name'] ?? 'Worker';
           
-          // XP tracking removed - will be calculated from actual data
-          print('✅ Task completed - XP will be calculated from database');
+          // Add XP for task completion using proper XP service
+          await XPService.awardXPForAction(
+            userId: reporterId,
+            action: 'report_completed',
+          );
 
-          print('✅ XP added to reporter: +20 XP');
+          print('✅ Task completed - XP added to reporter via XPService');
 
           // Send Prabhas style task completion notification to user
           await PrabhasNotificationService.sendIssueCompletionToUser(

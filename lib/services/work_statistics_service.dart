@@ -36,28 +36,49 @@ class WorkStatisticsService {
   /// Calculate real work statistics from database
   static Future<WorkStatistics> calculateWorkStatistics(String userId) async {
     try {
-      // Get all issues reported by this user
-      final issuesResponse = await _supabase
-          .from('issues')
-          .select('status')
-          .eq('user_id', userId);
+      // Get user role to determine which statistics to calculate
+      final profileResponse = await _supabase
+          .from('profiles')
+          .select('role, exp_points')
+          .eq('id', userId)
+          .single();
 
-      final issues = issuesResponse as List;
-      
-      // Count reports by status
-      int totalReports = issues.length;
-      int completedReports = issues.where((issue) => issue['status'] == 'completed').length;
-      int verifiedReports = issues.where((issue) => issue['status'] == 'verified').length;
-      int pendingReports = issues.where((issue) => issue['status'] == 'pending').length;
+      final userRole = profileResponse['role'] as String;
+      final xpPoints = profileResponse['exp_points'] ?? 0;
+      final level = _calculateLevel(xpPoints);
 
-      // Calculate XP based on actual data
-      // +10 XP for each report submitted
-      // +10 XP for each verified report
-      // +20 XP for each completed report
-      int xpPoints = (totalReports * 10) + (verifiedReports * 10) + (completedReports * 20);
+      int totalReports = 0;
+      int completedReports = 0;
+      int verifiedReports = 0;
+      int pendingReports = 0;
 
-      // Calculate level based on XP
-      int level = _calculateLevel(xpPoints);
+      if (userRole == 'worker') {
+        // For workers, count issues assigned to them
+        final assignedIssuesResponse = await _supabase
+            .from('issues')
+            .select('status')
+            .eq('assignee_id', userId);
+
+        final assignedIssues = assignedIssuesResponse as List;
+        
+        totalReports = assignedIssues.length;
+        completedReports = assignedIssues.where((issue) => issue['status'] == 'completed').length;
+        verifiedReports = assignedIssues.where((issue) => issue['status'] == 'verified').length;
+        pendingReports = assignedIssues.where((issue) => issue['status'] == 'pending').length;
+      } else {
+        // For citizens/admins, count issues they reported
+        final reportedIssuesResponse = await _supabase
+            .from('issues')
+            .select('status')
+            .eq('user_id', userId);
+
+        final reportedIssues = reportedIssuesResponse as List;
+        
+        totalReports = reportedIssues.length;
+        completedReports = reportedIssues.where((issue) => issue['status'] == 'completed').length;
+        verifiedReports = reportedIssues.where((issue) => issue['status'] == 'verified').length;
+        pendingReports = reportedIssues.where((issue) => issue['status'] == 'pending').length;
+      }
 
       return WorkStatistics(
         totalReports: totalReports,
@@ -130,5 +151,17 @@ class WorkStatisticsService {
     int currentLevelXP = currentLevel == 1 ? 0 : getXPForNextLevel(currentLevel - 1);
     int nextLevelXP = getXPForNextLevel(currentLevel);
     return nextLevelXP - currentLevelXP;
+  }
+
+  /// Calculate success rate percentage
+  static double calculateSuccessRate(WorkStatistics stats) {
+    if (stats.totalReports == 0) return 0.0;
+    return (stats.completedReports / stats.totalReports) * 100;
+  }
+
+  /// Get success rate as formatted string
+  static String getSuccessRateString(WorkStatistics stats) {
+    final rate = calculateSuccessRate(stats);
+    return '${rate.toStringAsFixed(1)}%';
   }
 }

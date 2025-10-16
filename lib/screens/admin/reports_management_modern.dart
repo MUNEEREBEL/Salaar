@@ -103,25 +103,30 @@ class _ReportsManagementModernState extends State<ReportsManagementModern> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Reports Management',
-                          style: AppTheme.headlineMedium.copyWith(
-                            color: AppTheme.whiteColor,
-                            fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Reports Management',
+                            style: AppTheme.headlineMedium.copyWith(
+                              color: AppTheme.whiteColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Track and manage all user reports',
-                          style: AppTheme.bodyMedium.copyWith(
-                            color: AppTheme.greyColor,
+                          const SizedBox(height: 4),
+                          Text(
+                            'Track and manage all user reports',
+                            style: AppTheme.bodyMedium.copyWith(
+                              color: AppTheme.greyColor,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
+                    const SizedBox(width: 8),
                     // Responsive app bar actions
                     LayoutBuilder(
                       builder: (context, constraints) {

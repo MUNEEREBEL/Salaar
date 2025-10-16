@@ -74,7 +74,7 @@ class LevelUpAnalyticsService {
         'leveled_up': leveledUp,
         'old_level': oldLevel,
         'new_level': newLevel,
-        'level_name': levelName,
+        'level_name': levelName, // Calculated dynamically, not stored
         'exp_to_next': getExpNeededForNextLevel(newExp),
       };
     } catch (e) {
@@ -149,7 +149,7 @@ class LevelUpAnalyticsService {
         'success': true,
         'user_id': userId,
         'current_level': currentLevel,
-        'level_name': levelName,
+        'level_name': levelName, // Calculated dynamically, not stored
         'exp_points': expPoints,
         'exp_to_next_level': expToNext,
         'issues_reported': issuesReported,
@@ -201,7 +201,7 @@ class LevelUpAnalyticsService {
           'full_name': user['full_name'],
           'exp_points': expPoints,
           'level': calculateLevel(expPoints),
-          'level_name': getLevelName(expPoints),
+          'level_name': getLevelName(expPoints), // Calculated dynamically, not stored
           'issues_reported': user['issues_reported'],
           'issues_verified': user['issues_verified'],
         };
@@ -375,12 +375,11 @@ class LevelUpAnalyticsService {
       final currentLevel = calculateLevel(currentExp);
       final levelName = getLevelName(currentExp);
 
-      // Update level in database
+      // Update level in database (level_name is calculated dynamically, not stored)
       await _supabase
           .from('profiles')
           .update({
             'level': currentLevel,
-            'level_name': levelName,
             'updated_at': DateTime.now().toIso8601String(),
           })
           .eq('id', userId);

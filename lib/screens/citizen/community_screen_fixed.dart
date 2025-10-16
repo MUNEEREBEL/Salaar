@@ -663,18 +663,23 @@ class _CommunityScreenFixedState extends State<CommunityScreenFixed>
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Icon(Icons.chat, color: AppTheme.primaryColor, size: 24),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Recent Discussions',
-                      style: AppTheme.titleLarge.copyWith(
-                        color: AppTheme.whiteColor,
-                        fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Row(
+                    children: [
+                      Icon(Icons.chat, color: AppTheme.primaryColor, size: 24),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'Recent Discussions',
+                          style: AppTheme.titleLarge.copyWith(
+                            color: AppTheme.whiteColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 TextButton(
                   onPressed: () {

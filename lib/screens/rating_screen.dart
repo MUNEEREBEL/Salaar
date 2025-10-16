@@ -133,28 +133,35 @@ class _RatingScreenState extends State<RatingScreen> {
             const SizedBox(height: 32),
             
             // Star Rating
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: List.generate(5, (index) {
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _selectedRating = index + 1;
-                    });
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Icon(
-                      index < _selectedRating ? Icons.star : Icons.star_border,
-                      size: 50,
-                      color: index < _selectedRating 
-                          ? AppTheme.accentColor 
-                          : AppTheme.greyColor,
-                    ),
-                  ),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final starSize = constraints.maxWidth > 400 ? 50.0 : 40.0;
+                final starSpacing = constraints.maxWidth > 400 ? 8.0 : 4.0;
+                
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: List.generate(5, (index) {
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedRating = index + 1;
+                        });
+                      },
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: starSpacing),
+                        child: Icon(
+                          index < _selectedRating ? Icons.star : Icons.star_border,
+                          size: starSize,
+                          color: index < _selectedRating 
+                              ? AppTheme.accentColor 
+                              : AppTheme.greyColor,
+                        ),
+                      ),
+                    );
+                  }),
                 );
-              }),
+              },
             ),
             const SizedBox(height: 16),
             

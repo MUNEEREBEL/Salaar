@@ -7,6 +7,35 @@ import 'package:flutter/material.dart';
 class PrabhasNotificationService {
   static final FlutterLocalNotificationsPlugin _notifications = FlutterLocalNotificationsPlugin();
   static bool _initialized = false;
+  static final Random _random = Random();
+
+  // Available notification sounds (only use sounds that exist in Android resources)
+  static const List<String> _notificationSounds = [
+    'xp_sound',
+    'task_sound', 
+    'worker_assignment',
+  ];
+
+  /// Get a random notification sound
+  static String getRandomSound() {
+    return _notificationSounds[_random.nextInt(_notificationSounds.length)];
+  }
+
+  /// Get a random sound for specific notification types
+  static String getRandomSoundForType(String type) {
+    switch (type.toLowerCase()) {
+      case 'worker_assignment':
+        return ['worker_assignment', 'task_sound', 'xp_sound'][_random.nextInt(3)];
+      case 'completion':
+        return ['task_sound', 'xp_sound', 'worker_assignment'][_random.nextInt(3)];
+      case 'xp':
+        return ['xp_sound', 'task_sound', 'worker_assignment'][_random.nextInt(3)];
+      case 'admin':
+        return ['xp_sound', 'task_sound', 'worker_assignment'][_random.nextInt(3)];
+      default:
+        return getRandomSound();
+    }
+  }
 
   // Worker Assignment - To User (15+ Prabhas Style Messages)
   static final List<String> _workerAssignmentToUser = [
@@ -310,7 +339,7 @@ class PrabhasNotificationService {
       title: 'Worker Assigned - Salaar Style! 🦁',
       body: message,
       payload: 'worker_assigned:$issueId:$userId',
-      soundFile: 'worker_assignment',
+      soundFile: getRandomSoundForType('worker_assignment'),
     );
   }
 
@@ -325,7 +354,7 @@ class PrabhasNotificationService {
       title: 'New Task - Rebel Style! 💥',
       body: message,
       payload: 'task_assigned:$issueId:$workerId',
-      soundFile: 'task_sound',
+      soundFile: getRandomSoundForType('completion'),
     );
   }
 
@@ -341,7 +370,7 @@ class PrabhasNotificationService {
       title: 'Issue Solved - Baahubali Style! 🏆',
       body: message,
       payload: 'task_completed:$issueId:$userId',
-      soundFile: 'xp_sound',
+      soundFile: getRandomSoundForType('xp'),
     );
   }
 
@@ -359,22 +388,22 @@ class PrabhasNotificationService {
       case 'info':
         title = 'Admin Info - Salaar Update! ⚡';
         body = getAdminInfoMessage(message);
-        soundFile = 'xp_sound';
+        soundFile = getRandomSoundForType('admin');
         break;
       case 'alert':
         title = 'Admin Alert - Rebel Warning! ⚠️';
         body = getAdminAlertMessage(message);
-        soundFile = 'task_sound';
+        soundFile = getRandomSoundForType('admin');
         break;
       case 'review':
         title = 'Admin Review - Baahubali Request! ⭐';
         body = getAdminReviewMessage(message);
-        soundFile = 'worker_assignment';
+        soundFile = getRandomSoundForType('admin');
         break;
       default:
         title = 'Admin Message - Salaar Style! 🦁';
         body = getAdminInfoMessage(message);
-        soundFile = 'xp_sound';
+        soundFile = getRandomSoundForType('admin');
     }
     
     await sendPrabhasNotification(
@@ -391,6 +420,7 @@ class PrabhasNotificationService {
       title: '🧪 Test - Prabhas Style!',
       body: '*Baahubali laga test chesaam! Salaar app ready!* 🦁',
       payload: 'test',
+      soundFile: getRandomSound(),
     );
   }
 }
